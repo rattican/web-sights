@@ -1,0 +1,9 @@
+.app-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+textarea#htmlInput::placeholder {
+  color: rgba(148, 163, 184, 0.7);
+}
