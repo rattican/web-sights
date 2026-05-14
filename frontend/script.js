@@ -4,7 +4,7 @@ import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 // API key
 const GEMINI_API_KEY = "AIzaSyCd1BiYKpQ_jzy5b4DQZJXIGPAUkoAsB5g";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 // references for ui elements
 const themeToggle = document.getElementById("themeToggle");
 const htmlInput = document.getElementById("htmlInput");
@@ -40,20 +40,6 @@ function setLoading(isLoading) {
     statusEl.classList.remove("loading-dots");
   }
 }
-
-// create request for Gemini API
-function prepareGeminiRequest(html) {
-  return {
-    model: "gemini-1.5-flash-latest",
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            text:
-              "Analyze the following HTML for accessibility issues. " +
-              "Return JSON with fields: issue_type, severity, description, wcag_reference, suggested_fix, & corrected_snippet. Here is the HTML:\n\n" + html
-}]}]};}
 
 // preps request structure for Gemini
 // checks if user pasted html, display status msg, & display
