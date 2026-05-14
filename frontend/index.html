@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebSights</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1>WebSights</h1>
+      <p>Click “Analyze” to check for accessibility issues.</p>
+    </header>
+
+    <section class="app-content">
+      <label for="htmlInput" class="sr-only">HTML to analyze:</label>
+      <textarea
+        id="htmlInput"
+        placeholder="Paste HTML here"
+        spellcheck="false"
+      ></textarea>
+
+      <button id="analyzeBtn" type="button">Analyze</button>
+
+      <div id="status" aria-live="polite"></div>
+
+      <section id="results" aria-live="polite" aria-label="Analysis results"></section>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
