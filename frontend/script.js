@@ -2,6 +2,7 @@
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
 // API key
+const GEMINI_API_KEY = "AIzaSyCd1BiYKpQ_jzy5b4DQZJXIGPAUkoAsB5g";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 // references for ui elements
@@ -54,66 +55,38 @@ function prepareGeminiRequest(html) {
               "Return JSON with fields: issue_type, severity, description, wcag_reference, suggested_fix, & corrected_snippet. Here is the HTML:\n\n" + html
 }]}]};}
 
-/* preps request structure for Gemini
+// preps request structure for Gemini
 // checks if user pasted html, display status msg, & display
 async function analyzeHTML() {
   const html = htmlInput.value.trim();
-  // check if any text entered
+
   if (!html) {
     setStatus("Please paste HTML first.", "error");
     return;
   }
 
-  // clear previous results and set status
   resultsEl.innerHTML = "";
   setStatus("Analyzing your HTML…", "info");
   setLoading(true);
 
-  // attempt to build request: responds with status based on that
   try {
-    const request = prepareGeminiRequest(html);
+    const prompt =
+      "Analyze the following HTML for accessibility issues. " +
+      "Return JSON with fields: issue_type, severity, description, wcag_reference, suggested_fix, corrected_snippet. " +
+      "Here is the HTML:\n\n" + html;
 
-    // send request to Gemini API
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + GEMINI_API_KEY, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(request)
-      });
-    // throw if error
-    if (!response.ok) throw new Error(`Gemini API error: ${response.status}`);
-
-    const data = await response.json();
-
-    // extract text
-    const output = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response from model.";
-
-    // display formatted output
-    document.getElementById("resultsHeader").hidden = false;
-    resultsEl.innerHTML = `<pre class="code-block">${output}</pre>`;
-
-    // display status
-    setStatus("Analysis complete.", "success");
-  } catch (err) {
-    console.error(err);
-    setStatus("Error connecting to Gemini API.", "error");
-  } finally {
-    setLoading(false);
-  }
-}
-*/
-
-async function analyzeHTML() {
-  const htmlInput = document.getElementById("html-input").value;
-
-  try {
-    const result = await model.generateContent(htmlInput);
+    const result = await model.generateContent(prompt);
     const text = result.response.text();
 
-    document.getElementById("results").textContent = text;
+    document.getElementById("resultsHeader").hidden = false;
+    resultsEl.innerHTML = `<pre class="code-block">${text}</pre>`;
+
+    setStatus("Analysis complete.", "success");
   } catch (err) {
     console.error("Gemini error:", err);
-    document.getElementById("results").textContent = "Error analyzing HTML.";
+    setStatus("Error analyzing HTML.", "error");
+  } finally {
+    setLoading(false);
   }
 }
 
