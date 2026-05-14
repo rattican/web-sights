@@ -77,12 +77,14 @@ body {
   border: 1px solid #ccc;
   font-family: monospace;
   font-size: 0.9rem;
+  resize: vertical;
+  line-height: 1.4;
 }
 #htmlInput::placeholder {
   color: #999;
 }
 
-/*button*/
+/*analyze button*/
 #analyzeBtn {
   align-self: flex-start;
   padding: 8px 16px;
@@ -96,18 +98,52 @@ body {
   background: #005fcc;
 }
 
+/*clear button*/
+.secondary-btn {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+.secondary-btn:hover {
+  background: var(--border);
+}
+
+
 /*stats*/
 #status {
   font-size: 0.8rem;
   color: #666;
 }
+/*for loading*/
+.loading-dots::after {
+  content: "…";
+  animation: dots 1s steps(3, end) infinite;
+}
+@keyframes dots {
+  0% { content: ""; }
+  33% { content: "."; }
+  66% { content: ".."; }
+  100% { content: "..."; }
+}
+
+
 /*results*/
+.results-header {
+  font-size: 1.2rem;
+  margin-top: 20px;
+  margin-bottom: 6px;
+  color: var(--text);
+  font-weight: 600;
+}
 #results {
   margin-top: 10px;
-  padding: 12px;
+  padding: 16px;
   border-radius: 8px;
-  background: #fafafa;
-  border: 1px solid #eee;
+  background: var(--card);
+  border: 1px solid var(--border);
   min-height: 60px;
   font-size: 0.9rem;
 }
@@ -136,4 +172,12 @@ body {
   word-break: break-word;
   border: 1px solid #333;
   margin-top: 8px;
+}
+
+/*footer*/
+.footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #777;
 }

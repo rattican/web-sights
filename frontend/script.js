@@ -5,6 +5,12 @@ const analyzeBtn = document.getElementById("analyzeBtn");
 const statusEl = document.getElementById("status");
 const resultsEl = document.getElementById("results");
 
+// auto resize if text area gets large HTML pasted
+htmlInput.addEventListener("input", () => {
+  htmlInput.style.height = "auto";
+  htmlInput.style.height = htmlInput.scrollHeight + "px";
+});
+
 // updates status msg text (info, error, or success)
 function setStatus(message, type = "info") {
   statusEl.textContent = message;
@@ -19,7 +25,13 @@ function setStatus(message, type = "info") {
 // handle disabled button/text changes
 function setLoading(isLoading) {
   analyzeBtn.disabled = isLoading;
-  analyzeBtn.textContent = isLoading ? "Analyzing…" : "Analyze";
+  if (isLoading) {
+    analyzeBtn.textContent = "Analyzing";
+    statusEl.classList.add("loading-dots");
+  } else {
+    analyzeBtn.textContent = "Analyze";
+    statusEl.classList.remove("loading-dots");
+  }
 }
 
 // create request for Gemini API
@@ -33,8 +45,7 @@ function prepareGeminiRequest(html) {
           {
             text:
               "Analyze the following HTML for accessibility issues. " +
-              "Return JSON with fields: issue_type, severity, description, wcag_reference, suggested_fix, & corrected_snippet. Here is the HTML:\n\n" +
-              html
+              "Return JSON with fields: issue_type, severity, description, wcag_reference, suggested_fix, & corrected_snippet. Here is the HTML:\n\n" + html
 }]}]};}
 
 // preps request structure for Gemini
@@ -60,7 +71,7 @@ async function analyzeHTML() {
     const response = await fetch(
       "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(request)
       });
     // throw if error
@@ -72,6 +83,7 @@ async function analyzeHTML() {
     const output = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response from model.";
 
     // display formatted output
+    document.getElementById("resultsHeader").hidden = false;
     resultsEl.innerHTML = `<pre class="code-block">${output}</pre>`;
 
     // display status
@@ -86,6 +98,13 @@ async function analyzeHTML() {
 
 // click handler for analyze button
 analyzeBtn.addEventListener("click", analyzeHTML);
+
+// click handler for clear button
+document.getElementById("clearBtn").addEventListener("click", () => {
+  htmlInput.value = "";
+  resultsEl.innerHTML = "";
+  setStatus("Cleared.", "info");
+});
 
 // toggle dark mode button
 themeToggle.addEventListener("click", () => {
