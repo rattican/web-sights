@@ -1,3 +1,9 @@
+// gemini SDK import
+import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+// API key
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 // references for ui elements
 const themeToggle = document.getElementById("themeToggle");
 const htmlInput = document.getElementById("htmlInput");
@@ -48,7 +54,7 @@ function prepareGeminiRequest(html) {
               "Return JSON with fields: issue_type, severity, description, wcag_reference, suggested_fix, & corrected_snippet. Here is the HTML:\n\n" + html
 }]}]};}
 
-// preps request structure for Gemini
+/* preps request structure for Gemini
 // checks if user pasted html, display status msg, & display
 async function analyzeHTML() {
   const html = htmlInput.value.trim();
@@ -93,6 +99,21 @@ async function analyzeHTML() {
     setStatus("Error connecting to Gemini API.", "error");
   } finally {
     setLoading(false);
+  }
+}
+*/
+
+async function analyzeHTML() {
+  const htmlInput = document.getElementById("html-input").value;
+
+  try {
+    const result = await model.generateContent(htmlInput);
+    const text = result.response.text();
+
+    document.getElementById("results").textContent = text;
+  } catch (err) {
+    console.error("Gemini error:", err);
+    document.getElementById("results").textContent = "Error analyzing HTML.";
   }
 }
 
