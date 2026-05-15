@@ -1,5 +1,5 @@
 // API key
-const GEMINI_API_KEY = "AIzaSyDWgurJEZv-S-ucs_ikcxicVNxDWjVFNHQ";
+const GEMINI_API_KEY = "AIzaSyDWDRlIO_pqQmbfK7vtS2bePOQOAV0SdWE";
 // references for ui elements
 const themeToggle = document.getElementById("themeToggle");
 const htmlInput = document.getElementById("htmlInput");
