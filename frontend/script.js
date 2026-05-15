@@ -1,5 +1,5 @@
 // API key
-const GEMINI_API_KEY = "AIzaSyCd1BiYKpQ_jzy5b4DQZJXIGPAUkoAsB5g";
+const GEMINI_API_KEY = "AIzaSyDWgurJEZv-S-ucs_ikcxicVNxDWjVFNHQ";
 // references for ui elements
 const themeToggle = document.getElementById("themeToggle");
 const htmlInput = document.getElementById("htmlInput");
@@ -55,18 +55,22 @@ async function analyzeHTML() {
       "Analyze the following HTML for accessibility issues. " +
       "Return JSON with fields: issue_type, severity, description, wcag_reference, suggested_fix, corrected_snippet. " +
       "Here is the HTML:\n\n" + html;
-
+      
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" + GEMINI_API_KEY,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }]
+            }
+          ]
         })
       }
     );
-
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
 
