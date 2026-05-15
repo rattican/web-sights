@@ -1,5 +1,5 @@
 // gemini SDK import
-import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai/dist/browser.mjs";
+import { GoogleGenerativeAI } from "https://cdn.jsdelivr.net/npm/@google/generative-ai@latest/dist/browser/index.js";
 
 // API key
 const GEMINI_API_KEY = "AIzaSyCd1BiYKpQ_jzy5b4DQZJXIGPAUkoAsB5g";
