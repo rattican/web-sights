@@ -1,10 +1,5 @@
-// gemini SDK import
-import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai?bundle";
-
 // API key
 const GEMINI_API_KEY = "AIzaSyCd1BiYKpQ_jzy5b4DQZJXIGPAUkoAsB5g";
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 // references for ui elements
 const themeToggle = document.getElementById("themeToggle");
 const htmlInput = document.getElementById("htmlInput");
@@ -61,16 +56,26 @@ async function analyzeHTML() {
       "Return JSON with fields: issue_type, severity, description, wcag_reference, suggested_fix, corrected_snippet. " +
       "Here is the HTML:\n\n" + html;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    );
+
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
 
     document.getElementById("resultsHeader").hidden = false;
     resultsEl.innerHTML = `<pre class="code-block">${text}</pre>`;
-
     setStatus("Analysis complete.", "success");
   } catch (err) {
     console.error("Gemini error:", err);
-    setStatus("Error analyzing HTML.", "error");
+    setStatus("Error connecting to Gemini API.", "error");
   } finally {
     setLoading(false);
   }
